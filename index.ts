@@ -18,7 +18,16 @@ class CustomMenu {
   
     constructor() {
       this.tree = Menu.AddEntry("MyCustomMenu")
-  
+
+      const description = new ShortDescription(
+        this.tree,
+        "biba boba",
+        "",
+        "images/icons/alien.svg"
+
+      )
+      this.tree.AddNode(description)
+
       this.toggleExample = this.tree.AddToggle("Включить скрипт", true)
       this.toggleExample.OnValue(t => {
         console.log("Переключатель включен:", t.value)
@@ -46,12 +55,8 @@ class CustomMenu {
 
       this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
       this.keybindExample.OnValue(k => {
-        console.log("Выбран биндинг клавиши:", k)
+        console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
       })
-  
-      this.textBoxExample = this.tree.AddTextBox("Ввод текста", "Пример")
-      this.textBoxExample.OnValue(text => {
-        console.log("Введён текст:", text)
     }
   }
   
