@@ -1,10 +1,4 @@
 import { EventsSDK, Menu, GameRules, DOTAGameUIState, GameState } from "github.com/octarine-public/wrapper/index"
-import { MenuManager } from "wrapper/Menu"
-import { Node } from "wrapper/Menu/Node"
-import { Slider } from "wrapper/Menu/Slider"
-import { KeyBind } from "wrapper/Menu/KeyBind"
-import { ColorPicker } from "wrapper/Menu/ColorPicker"
-import { Dropdown } from "wrapper/Menu/Dropdown"
 
 console.log("Hello World!")
 
