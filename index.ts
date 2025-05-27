@@ -52,7 +52,9 @@ class CustomMenu {
     this.keybindExample = this.tree.AddKeybind("Клавиша активации", "", false)
     this.keybindExample.TriggerOnChat = false
     this.keybindExample.ActivatesInMenu = false
-
+    this.keybindExample.OnValue(k => {
+        console.log("Назначена клавиша:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
+      })
 
   }
 }
