@@ -44,10 +44,10 @@ class CustomMenu {
       console.log("Кнопка была нажата!")
     })
 
-    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
+    /*this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
     this.keybindExample.OnValue(k => {
       console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
-    })
+    })*/
   }
 }
 
