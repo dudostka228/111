@@ -1,4 +1,5 @@
 import { EventsSDK, Menu, Color } from "github.com/octarine-public/wrapper/index"
+import { KeyNames } from "github.com/octarine-public/wrapper/Menu/KeyNames"
 
 console.log("Hello World!")
 
