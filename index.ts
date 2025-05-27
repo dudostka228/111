@@ -1,6 +1,7 @@
 import { EventsSDK } from "github.com/octarine-public/wrapper/index"
 
-console.log("Hello world!")
+console.log("Hello World!")
+
 EventsSDK.on("GameStarted", () => {
-	console.log("Hello world!")
+ console.log("GameStarted")
 })
