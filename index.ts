@@ -1,4 +1,10 @@
 import { EventsSDK, Menu, GameRules, DOTAGameUIState, GameState } from "github.com/octarine-public/wrapper/index"
+import { MenuManager } from "wrapper/Menu"
+import { Node } from "wrapper/Menu/Node"
+import { Slider } from "wrapper/Menu/Slider"
+import { KeyBind } from "wrapper/Menu/KeyBind"
+import { ColorPicker } from "wrapper/Menu/ColorPicker"
+import { Dropdown } from "wrapper/Menu/Dropdown"
 
 console.log("Hello World!")
 
@@ -6,33 +12,54 @@ EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
 
-class AutoCasterMenu {
-    public readonly Enabled: Menu.Toggle
-	public readonly UseCDR: Menu.Toggle
-	public readonly Keybind: Menu.KeyBind
+let initialized = false
+let menuTab: Node | undefined
 
-	private readonly node: Menu.Node
-	private readonly useMode: Menu.Dropdown
+function InitMenu() {
+	if (initialized) return
+	initialized = true
 
-	private readonly icon = "images/icons/alien.svg"
+	// Создаём вкладку меню
+	menuTab = MenuManager.AddEntry("OctarineScript", "menu/icons/custom.svg", "Settings")
+	menuTab.IsOpen = true
 
-	constructor(menuRoot: Menu.Node) {
-		this.node = menuRoot.AddNode("My AutoCaster", this.icon, "Text1")
+	// Чекбокс
+	menuTab.AddToggle("On/Off", "on off", true, (val) => {
+		console.log("Enabled: ", val)
+	})
 
-		this.Enabled = this.node.AddToggle("Enable script", true)
-		this.UseCDR = this.node.AddToggle("Use cooldown reset ability", true)
-		this.Keybind = this.node.AddKeyBind("Toggle script", "F6")
+	// Слайдер
+	menuTab.AddSlider("Interval", 50, 1000, 200, 10, (value) => {
+		console.log("Interval is:", value)
+	})
 
-		this.useMode = this.node.AddDropdown("Use mode", ["Always", "Only in menu", "Only in game"])
+	// Бинд клавиши
+	menuTab.AddKeyBind("button", 0x2E /* Delete */, true, (keyCode) => {
+		console.log("button is:", keyCode)
+	})
 
-		this.node.SortNodes = false
-	}
+	// Выпадающий список
+	menuTab.AddDropdown(
+		"dropdown",
+		["auto", "manual", "off"],
+		0,
+		(index, value) => {
+			console.log(`dropdown is: ${value} (ID ${index})`)
+		}
+	)
 
-	public get ShouldRun(): boolean {
-		if (!this.Enabled.value) return false
-		const id = this.useMode.SelectedID
-		if (id === 0) return true
-		const isInMenu = GameRules === undefined || GameState.UIState !== DOTAGameUIState.DOTA_GAME_UI_DOTA_INGAME
-		return (id === 1 && isInMenu) || (id === 2 && !isInMenu)
-	}
+	// Выбор цвета
+	menuTab.AddColorPicker("color UI", [255, 0, 0, 255], (rgba) => {
+		console.log("color is:", rgba)
+	})
 }
+
+// Точка входа
+function main() {
+	InitMenu()
+
+	// Здесь можно разместить логику скрипта
+	console.log("initialized")
+}
+
+main()
