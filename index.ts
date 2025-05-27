@@ -12,6 +12,7 @@ class CustomMenu {
     public sliderExample: Menu.Slider
     public colorPickerExample: Menu.ColorPicker
     public dropdownExample: Menu.Dropdown
+    public buttonExample: Menu.Button
   
     constructor() {
       this.tree = Menu.AddEntry("MyCustomMenu")
@@ -34,6 +35,11 @@ class CustomMenu {
       this.colorPickerExample = this.tree.AddColorPicker("Цвет UI", Color.Red)
       this.colorPickerExample.OnValue(c => {
         console.log("Выбран цвет:", c)
+      })
+
+      this.buttonExample = this.tree.AddButton("Нажми меня")
+      this.buttonExample.OnValue(() => {
+        console.log("Кнопка была нажата!")
       })
     }
   }
