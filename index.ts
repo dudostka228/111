@@ -13,6 +13,8 @@ class CustomMenu {
     public colorPickerExample: Menu.ColorPicker
     public dropdownExample: Menu.Dropdown
     public buttonExample: Menu.Button
+    public keybindExample: Menu.Keybind
+    public textBoxExample: Menu.TextBox
   
     constructor() {
       this.tree = Menu.AddEntry("MyCustomMenu")
@@ -41,6 +43,15 @@ class CustomMenu {
       this.buttonExample.OnValue(() => {
         console.log("Кнопка была нажата!")
       })
+
+      this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
+      this.keybindExample.OnValue(k => {
+        console.log("Выбран биндинг клавиши:", k)
+      })
+  
+      this.textBoxExample = this.tree.AddTextBox("Ввод текста", "Пример")
+      this.textBoxExample.OnValue(text => {
+        console.log("Введён текст:", text)
     }
   }
   
