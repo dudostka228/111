@@ -13,7 +13,8 @@ class CustomMenu {
   public colorPickerExample: Menu.ColorPicker
   public dropdownExample: Menu.Dropdown
   public buttonExample: Menu.Button
-  public keybindExample: Menu.Keybind
+  public keybindExample: Menu.KeyBind
+  public keynamesExample: Menu.KeyNames
 
   constructor() {
     this.tree = Menu.AddEntry("MyCustomMenu")
@@ -47,17 +48,25 @@ class CustomMenu {
     this.keybindExample.OnValue(k => {
       console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
     })*/
-    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
-    this.keybindExample.TriggerOnChat = true
-    this.keybindExample.ActivatesInMenu = true
+    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "None", false)
+    this.keybindExample.TriggerOnChat = false
+    this.keybindExample.ActivatesInMenu = false
 
     this.keybindExample.OnPressed(k => {
-      console.log("Нажали:", k.assignedKeyStr)
-    })
-
-    this.keybindExample.OnRelease(k => {
-      console.log("Отжали:", k.assignedKeyStr)
-    })
+        const keyStr = KeyNames[k.assignedKey] || "Unknown"
+        console.log("Нажата клавиша:", keyStr)
+      
+        // Пример: если пользователь выбрал Q — срабатывает логика
+        if (keyStr === "Q") {
+          console.log("Активируем Q-шную способность")
+          // Логика активации
+        }
+      })
+      
+      this.keybindExample.OnRelease(k => {
+        const keyStr = KeyNames[k.assignedKey] || "Unknown"
+        console.log("Отжата клавиша:", keyStr)
+      })
   }
 }
 
