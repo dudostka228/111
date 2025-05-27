@@ -1,5 +1,4 @@
 import { EventsSDK, Menu, GameRules, DOTAGameUIState, GameState, Color } from "github.com/octarine-public/wrapper/index"
-import { ShortDescription } from "github.com/octarine-public/wrapper/wrapper/Menu"
 
 console.log("Hello World!")
 
@@ -16,19 +15,9 @@ class CustomMenu {
   public buttonExample: Menu.Button
   public keybindExample: Menu.Keybind
   public textBoxExample: Menu.TextBox
-  public shortDescExample: Menu.ShortDescription
 
   constructor() {
     this.tree = Menu.AddEntry("MyCustomMenu")
-
-    this.shortDescExample = new ShortDescription(
-        this.tree,
-        "text",
-        "hint",
-        "github.com/octarine-public/wrapper/scripts_files/images/icons/alien.svg",
-        6
-      )
-      this.tree.AddNode(this.shortDescExample)
 
     this.toggleExample = this.tree.AddToggle("Включить скрипт", true)
     this.toggleExample.OnValue(t => {
