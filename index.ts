@@ -6,54 +6,36 @@ EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
 
-let initialized = false
-let menuTab: Node | undefined
-
-function InitMenu() {
-	if (initialized) return
-	initialized = true
-
-	// Создаём вкладку меню
-	menuTab = MenuManager.AddEntry("OctarineScript", "menu/icons/custom.svg", "Settings")
-	menuTab.IsOpen = true
-
-	// Чекбокс
-	menuTab.AddToggle("On/Off", "on off", true, (val) => {
-		console.log("Enabled: ", val)
-	})
-
-	// Слайдер
-	menuTab.AddSlider("Interval", 50, 1000, 200, 10, (value) => {
-		console.log("Interval is:", value)
-	})
-
-	// Бинд клавиши
-	menuTab.AddKeyBind("button", 0x2E /* Delete */, true, (keyCode) => {
-		console.log("button is:", keyCode)
-	})
-
-	// Выпадающий список
-	menuTab.AddDropdown(
-		"dropdown",
-		["auto", "manual", "off"],
-		0,
-		(index, value) => {
-			console.log(`dropdown is: ${value} (ID ${index})`)
-		}
-	)
-
-	// Выбор цвета
-	menuTab.AddColorPicker("color UI", [255, 0, 0, 255], (rgba) => {
-		console.log("color is:", rgba)
-	})
-}
-
-// Точка входа
-function main() {
-	InitMenu()
-
-	// Здесь можно разместить логику скрипта
-	console.log("initialized")
-}
-
-main()
+class CustomMenu {
+    private tree: Menu.Node
+    public toggleExample: Menu.Toggle
+    public sliderExample: Menu.Slider
+    public colorPickerExample: Menu.ColorPicker
+    public dropdownExample: Menu.Dropdown
+  
+    constructor() {
+      this.tree = Menu.AddEntry("MyCustomMenu")
+  
+      this.toggleExample = this.tree.AddToggle("Включить скрипт", true)
+      this.toggleExample.OnValue(t => {
+        console.log("Переключатель включен:", t.value)
+      })
+  
+      this.sliderExample = this.tree.AddSlider("Интервал (мс)", 50, 10, 1000, 10)
+      this.sliderExample.OnValue(s => {
+        console.log("Слайдер значение:", s.value)
+      })
+  
+      this.dropdownExample = this.tree.AddDropdown("Режим работы", ["Авто", "Ручной", "Отключено"], 0)
+      this.dropdownExample.OnValue((index, value) => {
+        console.log(`Выбран режим: ${value} (ID ${index})`)
+      })
+  
+      this.colorPickerExample = this.tree.AddColorPicker("Цвет UI", Color.Red)
+      this.colorPickerExample.OnValue(c => {
+        console.log("Выбран цвет:", c)
+      })
+    }
+  }
+  
+  new CustomMenu()
