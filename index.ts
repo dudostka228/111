@@ -1,5 +1,4 @@
 import { EventsSDK, Menu, Color } from "github.com/octarine-public/wrapper/index"
-import { KeyNames } from "github.com/octarine-public/wrapper/Menu/KeyNames"
 
 console.log("Hello World!")
 
@@ -49,19 +48,12 @@ class CustomMenu {
     this.keybindExample.OnValue(k => {
       console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
     })*/
-    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "F", false)
+    /*this.keybindExample = this.tree.AddKeybind("Клавиша активации", "F", false)*/
+    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "", false)
     this.keybindExample.TriggerOnChat = false
     this.keybindExample.ActivatesInMenu = false
 
-    this.keybindExample.OnPressed(k => {
-        const keyStr = KeyNames[k.assignedKey] || "Unknown"
-        console.log("Нажата клавиша:", keyStr)
-      })
-      
-      this.keybindExample.OnRelease(k => {
-        const keyStr = KeyNames[k.assignedKey] || "Unknown"
-        console.log("Отжата клавиша:", keyStr)
-      })
+
   }
 }
 
