@@ -44,18 +44,12 @@ class CustomMenu {
       console.log("Кнопка была нажата!")
     })
 
-    /*this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
-    this.keybindExample.OnValue(k => {
-      console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
-    })*/
-    /*this.keybindExample = this.tree.AddKeybind("Клавиша активации", "F", false)*/
-    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "", false)
-    this.keybindExample.TriggerOnChat = false
-    this.keybindExample.ActivatesInMenu = false
-    this.keybindExample.OnValue(k => {
-        console.log("Назначена клавиша:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
-      })
-
+    this.keybindExample = this.tree.AddKeybind("Клавиша активации")
+    this.keybindExample.OnPressed(() => this.pressedButton())
+    
+  }
+  public pressedButton() {
+    console.log("биндик топчик")
   }
 }
 
