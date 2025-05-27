@@ -15,26 +15,19 @@ class CustomMenu {
   public buttonExample: Menu.Button
   public keybindExample: Menu.Keybind
   public textBoxExample: Menu.TextBox
-  public noteExample: Menu.ShortDescripton
+  public shortDescExample: Menu.ShortDescription
 
   constructor() {
     this.tree = Menu.AddEntry("MyCustomMenu")
 
-    /*this.noteExample = new ShortDescripton(
+    this.shortDescExample = new ShortDescription(
         this.tree,
         "text",
         "hint",
         "github.com/octarine-public/wrapper/scripts_files/images/icons/alien.svg",
         6
-    )
-    this.tree.AddNote(this.noteExample)*/
-    this.noteExample = this.tree.AddNote(
-        this.tree,
-        "text",
-        "hint",
-        "github.com/octarine-public/wrapper/scripts_files/images/icons/alien.svg",
-        6
-    )
+      )
+      this.tree.AddNode(this.shortDescExample)
 
     this.toggleExample = this.tree.AddToggle("Включить скрипт", true)
     this.toggleExample.OnValue(t => {
