@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, GameRules, DOTAGameUIState, GameState, Color } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Color } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -14,7 +14,6 @@ class CustomMenu {
   public dropdownExample: Menu.Dropdown
   public buttonExample: Menu.Button
   public keybindExample: Menu.Keybind
-  public textBoxExample: Menu.TextBox
 
   constructor() {
     this.tree = Menu.AddEntry("MyCustomMenu")
@@ -48,6 +47,17 @@ class CustomMenu {
     this.keybindExample.OnValue(k => {
       console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
     })*/
+    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "K", false)
+    this.keybindExample.TriggerOnChat = true
+    this.keybindExample.ActivatesInMenu = true
+
+    this.keybindExample.OnPressed(k => {
+      console.log("Нажали:", k.assignedKeyStr)
+    })
+
+    this.keybindExample.OnRelease(k => {
+      console.log("Отжали:", k.assignedKeyStr)
+    })
   }
 }
 
