@@ -20,7 +20,7 @@ class CustomMenu {
   constructor() {
     this.tree = Menu.AddEntry("MyCustomMenu")
 
-    this.noteExample = this.tree.AddNote(
+    this.noteExample = this.tree.Note(
     "biba boba",
     "",
     "github.com/octarine-public/wrapper/scripts_files/images/icons/alien.svg")
