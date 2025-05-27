@@ -1,5 +1,5 @@
-import { EventsSDK, Menu, GameRules, DOTAGameUIState, GameState, Color } from "C:/github.com/octarine-public/wrapper/index"
-import { ShortDescription } from "C:/github.com/octarine-public/wrapper/wrapper/Menu/ShortDescription"
+import { EventsSDK, Menu, GameRules, DOTAGameUIState, GameState, Color } from "github.com/octarine-public/wrapper/index"
+import { ShortDescription } from "github.com/octarine-public/wrapper/wrapper/Menu"
 
 console.log("Hello World!")
 
