@@ -56,11 +56,6 @@ class CustomMenu {
         const keyStr = KeyNames[k.assignedKey] || "Unknown"
         console.log("Нажата клавиша:", keyStr)
       
-        // Пример: если пользователь выбрал Q — срабатывает логика
-        if (keyStr === "Q") {
-          console.log("Активируем Q-шную способность")
-          // Логика активации
-        }
       })
       
       this.keybindExample.OnRelease(k => {
