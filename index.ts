@@ -48,14 +48,13 @@ class CustomMenu {
     this.keybindExample.OnValue(k => {
       console.log("Выбран биндинг клавиши:", k.assignedKeyStr, "(код:", k.assignedKey, ")")
     })*/
-    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "None", false)
+    this.keybindExample = this.tree.AddKeybind("Клавиша активации", "F", false)
     this.keybindExample.TriggerOnChat = false
     this.keybindExample.ActivatesInMenu = false
 
     this.keybindExample.OnPressed(k => {
         const keyStr = KeyNames[k.assignedKey] || "Unknown"
         console.log("Нажата клавиша:", keyStr)
-      
       })
       
       this.keybindExample.OnRelease(k => {
