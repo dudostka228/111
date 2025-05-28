@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, Ability, Unit, Entity } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, Unit, Entity, EntityManager } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -61,7 +61,7 @@ class CustomMenu {
       console.log("Error or Ability is not ready", ability.CooldownDuration)
     }
     const owner = ability.Owner
-    const allEntities = Entity.EntityManager.AllEntities
+    const allEntities = EntityManager.AllEntities
     const enemies = allEntities.filter (ent =>
       ent.IsAlive && ability.CanHit(ent))
 
