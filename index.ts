@@ -36,7 +36,7 @@ class CustomMenu {
     this.keybindHook = this.tree.AddKeybind("Клавиша хука")
     this.keybindHook.OnPressed(() => this.onHookPressed())
 
-    this.keybindLogAbilities = this.tree.AddKeybind("Лог способностей героя")
+    this.keybindLogAbilities = this.tree.AddKeybind("chc test")
     this.keybindLogAbilities.OnPressed(() => this.onLogAbilities())
 
     EventsSDK.on("Tick", () => this.onTickAbilities())
