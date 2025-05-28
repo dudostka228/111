@@ -10,11 +10,15 @@ import {
   juggernaut_blade_fury,
   shadow_demon_disseminate,
   spectre_dispersion,
+  Ability,
+  WrapperClass
 } from "github.com/octarine-public/wrapper/index"
-import {
-  dazzle_bad_juju_lua,
-  ursa_enrage_lua
-} from "github.com/octarine-public/wrapper/Objects/Abilities/"
+
+@WrapperClass("ursa_enrage_lua")
+class ursa_enrage_lua extends Ability {}
+
+@WrapperClass("dazzle_bad_juju_lua")
+class dazzle_bad_juju_lua extends Ability {}
 
 EventsSDK.on("GameStarted", () => {
   console.log("GameStarted")
@@ -120,7 +124,6 @@ class CustomMenu {
     if (!(raw instanceof Player)) return
     const me = raw as Player
 
-    // Собираем все способности по классам
     let abilities = [
       ...this.getAbilitiesFromEntity(ursa_enrage_lua),
       ...this.getAbilitiesFromEntity(juggernaut_blade_fury),
@@ -131,26 +134,23 @@ class CustomMenu {
       abilities.push(...this.getAbilitiesFromEntity(spectre_dispersion) as spectre_dispersion[])
     }
 
-    // Фильтруем способности, принадлежащие локальному герою и готовые к касту
     abilities = abilities.filter(abil => {
       const owner = (abil as any).Owner as Unit | undefined
       return owner === me && abil.IsReady && abil.CanBeCasted()
     })
 
-    // Кастуем каждую
     for (const abil of abilities) {
       abil.UseAbility(me, false, false, false, true)
       console.log(`Cast ${abil.Name}`)
     }
 
-    // Последним бьем Bad Juju
-    const badList = this.getAbilitiesFromEntity(dazzle_bad_juju_lua) as dazzle_bad_juju_lua[]
-    badList.forEach(badJuju => {
-      if ((badJuju as any).Owner === me && badJuju.IsReady && badJuju.CanBeCasted()) {
-        badJuju.UseAbility(me, false, false, false, true)
-        console.log(`Cast ${badJuju.Name}`)
-      }
-    })
+    // const badList = this.getAbilitiesFromEntity(dazzle_bad_juju_lua) as dazzle_bad_juju_lua[]
+    // badList.forEach(badJuju => {
+    //   if ((badJuju as any).Owner === me && badJuju.IsReady && badJuju.CanBeCasted()) {
+    //     badJuju.UseAbility(me, false, false, false, true)
+    //     console.log(`Cast ${badJuju.Name}`)
+    //   }
+    // })
   }
 
   private onTickAbilities() {
@@ -159,7 +159,6 @@ class CustomMenu {
     if (!(raw instanceof Player)) return
     const me = raw as Player
 
-    // Повторяем логику onCastAbilities для тик-ротации
     this.onCastAbilities()
   }
 }
