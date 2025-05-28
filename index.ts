@@ -4,8 +4,10 @@ import {
   EntityManager,
   LocalPlayer,
   Unit,
-  Player
+  pudge_meat_hook,
+  Vector3,
 } from "github.com/octarine-public/wrapper/index"
+import { Events } from "octarine-wrapper"
 
 console.log("Hello World!")
 
@@ -33,71 +35,54 @@ class CustomMenu {
   private pressedButton() {
     console.log("Bind is pressed")
 
-    const rawMe = LocalPlayer
-    if (!rawMe) {
-      console.error("LocalPlayer не определён")
-      return
-    }
-    if (!(rawMe instanceof Player)) {
-      console.error("LocalPlayer не является Player")
-      return
-    }
-    const me = rawMe as Player
-
-    const hookAbility = me.Spells.find(
-      abil => abil.Name === "pudge_meat_hook"
-    )
-    if (!hookAbility) {
-      console.error("Ability pudge_meat_hook не найдена у героя")
+    const hooks = EntityManager.GetEntitiesByClass(pudge_meat_hook)
+    if (hooks.length === 0) {
+      console.error("No pudge_meat_hook instances found")
       return
     }
 
-    const radius = hookAbility.CastRange
-    console.log("Ability.CastRange:", radius)
-    if (radius <= 0) {
-      console.warn("CastRange = 0, способность ещё не синхронизировалась")
-      return
-    }
+    for (const hook of hooks) {
+      const owner = hook.Owner
+      if (!owner || !owner.IsControllable) {
+        continue
+      }
+      if (!hook.CanBeCasted()) {
+        console.warn("Meat Hook not ready. CooldownDuration:", hook.CooldownDuration)
+        continue
+      }
 
-    const enemiesInRange = EntityManager.AllEntities.filter(ent =>
-      ent instanceof Unit &&
-      ent.IsAlive &&
-      ent.IsEnemy(me) &&
-      me.Distance(ent) <= radius
-    )
-    console.log("Enemies in range:", enemiesInRange.map(e => e.Name))
-    if (enemiesInRange.length === 0) {
-      console.log("Нет целей в радиусе", radius)
-      return
-    }
+      const radius = hook.CastRange
+      console.log("Hook CastRange:", radius)
 
-    const target = me.Closest(enemiesInRange)
-    console.log(
-      "Selected target:",
-      target.Name,
-      "Distance:",
-      me.Distance(target),
-      "Position:",
-      target.Position.x,
-      target.Position.y,
-      target.Position.z
-    )
-
-    const used = hookAbility.UseAbility(
-      target,            // Entity convert in coords
-      false,             // checkAutoCast
-      false,             // checkToggled
-      false,             // queue
-      true               // showEffects
-    )
-
-    if (used) {
-      console.log("Meat Hook выпущен по", target.Name)
-    } else {
-      console.error(
-        "Не удалось использовать Meat Hook. CooldownDuration:",
-        hookAbility.CooldownDuration
+      const me = owner as Unit
+      const enemies = EntityManager.AllEntities.filter(ent =>
+        ent instanceof Unit &&
+        ent.IsAlive &&
+        ent.IsEnemy(me) &&
+        me.Distance(ent) <= radius
       )
+      console.log("Enemies in range:", enemies.map(e => e.Name))
+      if (enemies.length === 0) {
+        console.log("No targets within radius", radius)
+        continue
+      }
+
+      const target = me.Closest(enemies)
+      console.log(
+        "Selected target:",
+        target.Name,
+        "Distance:",
+        me.Distance(target),
+        "Position:",
+        target.Position.x,
+        target.Position.y,
+        target.Position.z
+      )
+
+      me.CastPosition(hook, target.Position)
+      console.log("Meat Hook cast at", target.Name)
+
+      return
     }
   }
 }
