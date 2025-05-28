@@ -6,11 +6,6 @@ EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
 
-const allHeroes = Entity.EntityManager.AllEntities.filter(ent => ent.IsUnit && ent.IsHero)
-if (!allHeroes) {
-  console.log("AllHeroes not loaded")
-}
-
 const index = 0
 const serial = 0
 const ability = new Ability(index, serial, "pudge_meat_hook")
