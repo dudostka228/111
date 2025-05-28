@@ -59,7 +59,7 @@ class CustomMenu {
       console.log("Ability is Ready")
       ability.UseAbility()
     } else {
-      console.log("Error, Ability is not ready", ability.Cooldown)
+      console.log("Error, Ability is not ready", ability.CooldownDuration.toFixed(1))
     }
   }
 }
