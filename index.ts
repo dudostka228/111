@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, Ability } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, Unit, Entity } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -56,10 +56,23 @@ class CustomMenu {
   public pressedButton() {
     console.log("Bind is pressed")
     if (ability.isReady) {
-      console.log("Ability is Ready")
-      ability.UseAbility()
+      console.log("Ability is Ready", ability.IsReady)
+      // ability.UseAbility()
     } else {
-      console.log("Error, Ability is not ready", ability.CooldownDuration)
+      console.log("Error or Ability is not ready", ability.CooldownDuration)
+    }
+    const owner = ability.Owner
+    if (!owner) {
+      console.log("Owner Error")
+    }
+    const enemies:Entity[] = GameState.AllHeroes.filter(ent =>
+      ent.IsAlive && ent.IsEnemy(owner) && ability.CantHit(ent)
+      )
+    const target = owner.Closest(enemies)
+    if (target) {
+      console.log(`Cast spell in ${target.Name}`)
+    } else {
+      console.log("Target Error or zero targets")
     }
   }
 }
