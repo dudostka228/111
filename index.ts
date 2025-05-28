@@ -1,7 +1,6 @@
 import {
   EventsSDK,
   Menu,
-  Ability,
   EntityManager,
   LocalPlayer,
   Unit
@@ -12,8 +11,6 @@ console.log("Hello World!")
 EventsSDK.on("GameStarted", () => {
   console.log("GameStarted")
 })
-
-const ability = new Ability(0, 0, "pudge_meat_hook")
 
 class CustomMenu {
   private tree: Menu.Node
@@ -40,25 +37,29 @@ class CustomMenu {
       return
     }
 
-    console.log("Ability.BaseCastRange:", ability.BaseCastRange)
-    console.log("Ability.CastRange:", ability.CastRange)
-    console.log("Ability.SkillshotRange:", ability.SkillshotRange)
-    console.log("Ability.AbilityBehaviorMask:", ability.AbilityBehaviorMask)
-    console.log("Ability.TargetTypeMask:", ability.TargetTypeMask)
-    console.log("Ability.TargetFlagsMask:", ability.TargetFlagsMask)
+    const hookAbility = me.Abilities?.find(
+      a => a.Name === "pudge_meat_hook"
+    )
+    if (!hookAbility) {
+      console.error("Ability pudge_meat_hook not found on hero")
+      return
+    }
 
-    const radius = ability.SkillshotRange
-    console.log("Using radius:", radius)
+    console.log("Ability.CastRange:", hookAbility.CastRange)
+    if (hookAbility.CastRange === 0) {
+      console.warn("CastRange = 0, возможно способность ещё не синхронизировалась")
+      return
+    }
+
+    const radius = hookAbility.CastRange
 
     const enemiesInRange = EntityManager.AllEntities.filter(ent =>
       ent instanceof Unit &&
       ent.IsAlive &&
       ent.IsEnemy(me) &&
-      ent.Distance(me) <= radius
+      me.Distance(ent) <= radius
     )
-
-    console.log("Found enemiesInRange:", enemiesInRange.map(e => e.Name))
-
+    console.log("Enemies in range:", enemiesInRange.map(e => e.Name))
     if (enemiesInRange.length === 0) {
       console.log("No valid targets within radius", radius)
       return
@@ -69,30 +70,27 @@ class CustomMenu {
       "Selected target:",
       target.Name,
       "Distance:",
-      me.Distance(target)
-    )
-
-    console.log(
-      "Target.Position:",
+      me.Distance(target),
+      "Position:",
       target.Position.x,
       target.Position.y,
       target.Position.z
     )
 
-    const used = ability.UseAbility(
+    const used = hookAbility.UseAbility(
       target,
-      /* checkAutoCast */ false,
-      /* checkToggled */ false,
-      /* queue */ false,
-      /* showEffects */ true
+      /*checkAutoCast*/ false,
+      /*checkToggled*/ false,
+      /*queue*/ false,
+      /*showEffects*/ true
     )
 
     if (used) {
       console.log("Meat Hook fired at", target.Name)
     } else {
-      console.log(
+      console.error(
         "Failed to use Meat Hook. CooldownDuration:",
-        ability.CooldownDuration
+        hookAbility.CooldownDuration
       )
     }
   }
