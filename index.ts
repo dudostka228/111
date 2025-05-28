@@ -3,7 +3,8 @@ import {
   Menu,
   EntityManager,
   LocalPlayer,
-  Unit
+  Unit,
+  Player
 } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
@@ -31,22 +32,28 @@ class CustomMenu {
 
   private pressedButton() {
     console.log("Bind is pressed")
-    const me = LocalPlayer
-    if (!me) {
-      console.log("LocalPlayer is not defined")
+
+    const rawMe = LocalPlayer
+    if (!rawMe) {
+      console.error("LocalPlayer не определён")
       return
     }
+    if (!(rawMe instanceof Player)) {
+      console.error("LocalPlayer не является Player")
+      return
+    }
+    const me = rawMe as Player
 
     const hookAbility = me.GetAbilityByName("pudge_meat_hook")
     if (!hookAbility) {
-      console.error("Ability pudge_meat_hook not found on hero")
+      console.error("Ability pudge_meat_hook не найдена у героя")
       return
     }
 
     const radius = hookAbility.CastRange
     console.log("Ability.CastRange:", radius)
-    if (radius === 0) {
-      console.warn("CastRange = 0, возможно способность ещё не синхронизировалась")
+    if (radius <= 0) {
+      console.warn("CastRange = 0, способность ещё не синхронизировалась")
       return
     }
 
@@ -58,7 +65,7 @@ class CustomMenu {
     )
     console.log("Enemies in range:", enemiesInRange.map(e => e.Name))
     if (enemiesInRange.length === 0) {
-      console.log("No valid targets within radius", radius)
+      console.log("Нет целей в радиусе", radius)
       return
     }
 
@@ -75,18 +82,18 @@ class CustomMenu {
     )
 
     const used = hookAbility.UseAbility(
-      target,
-      /* checkAutoCast */ false,
-      /* checkToggled */ false,
-      /* queue */ false,
-      /* showEffects */ true
+      target,            // Entity convert in coords
+      false,             // checkAutoCast
+      false,             // checkToggled
+      false,             // queue
+      true               // showEffects
     )
 
     if (used) {
-      console.log("Meat Hook fired at", target.Name)
+      console.log("Meat Hook выпущен по", target.Name)
     } else {
       console.error(
-        "Failed to use Meat Hook. CooldownDuration:",
+        "Не удалось использовать Meat Hook. CooldownDuration:",
         hookAbility.CooldownDuration
       )
     }
