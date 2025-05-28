@@ -1,10 +1,15 @@
-import { EventsSDK, Menu, Color } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, Pudge } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
 EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
+
+
+const index = 0
+const serial = 0
+const ability = new pudge_rot(index, serial, "pudge_rot")
 
 class CustomMenu {
   private tree: Menu.Node
@@ -23,33 +28,39 @@ class CustomMenu {
     this.toggleExample.OnValue(t => {
       console.log("Переключатель включен:", t.value)
     })
+    
+    // this.sliderExample = this.tree.AddSlider("Интервал (мс)", 50, 10, 1000, 10)
+    // this.sliderExample.OnValue(s => {
+    //   console.log("Слайдер значение:", s.value)
+    // })
 
-    this.sliderExample = this.tree.AddSlider("Интервал (мс)", 50, 10, 1000, 10)
-    this.sliderExample.OnValue(s => {
-      console.log("Слайдер значение:", s.value)
-    })
+    // this.dropdownExample = this.tree.AddDropdown("Режим работы", ["Авто", "Ручной", "Отключено"], 0)
+    // this.dropdownExample.OnValue((index, value) => {
+    //   console.log(`Выбран режим: ${value} (ID ${index})`)
+    // })
 
-    this.dropdownExample = this.tree.AddDropdown("Режим работы", ["Авто", "Ручной", "Отключено"], 0)
-    this.dropdownExample.OnValue((index, value) => {
-      console.log(`Выбран режим: ${value} (ID ${index})`)
-    })
+    // this.colorPickerExample = this.tree.AddColorPicker("Цвет UI", Color.Red)
+    // this.colorPickerExample.OnValue(c => {
+    //   console.log("Выбран цвет:", c)
+    // })
 
-    this.colorPickerExample = this.tree.AddColorPicker("Цвет UI", Color.Red)
-    this.colorPickerExample.OnValue(c => {
-      console.log("Выбран цвет:", c)
-    })
-
-    this.buttonExample = this.tree.AddButton("Нажми меня")
-    this.buttonExample.OnValue(() => {
-      console.log("Кнопка была нажата!")
-    })
+    // this.buttonExample = this.tree.AddButton("Нажми меня")
+    // this.buttonExample.OnValue(() => {
+    //   console.log("Кнопка была нажата!")
+    // })
 
     this.keybindExample = this.tree.AddKeybind("Клавиша активации")
     this.keybindExample.OnPressed(() => this.pressedButton())
     
   }
   public pressedButton() {
-    console.log("биндик топчик")
+    console.log("Bind is pressed")
+    if (ability.isReady) {
+      console.log("Rot is Ready")
+      ability.UseAbility()
+    } else {
+      console.log("Error, Rot is not ready", ability.Cooldown.toFixed(1))
+    }
   }
 }
 

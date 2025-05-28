@@ -36,5 +36,8 @@
 		"type": "git",
 		"directory": "/",
 		"url": "https://github.com/octarine-public/example-repo"
+	},
+	"dependencies": {
+		"octarine-wrapper": "github:octarine-public/wrapper"
 	}
 }
