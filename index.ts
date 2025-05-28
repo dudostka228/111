@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, Ability, Unit, Entity, GameState } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, Unit, Entity } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -6,7 +6,7 @@ EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
 
-const allHeroes = GameState.AllHeroes
+const allHeroes = Entity.EntityManager.AllEntities.filter(ent => ent.IsUnit && ent.IsHero)
 if (!allHeroes) {
   console.log("AllHeroes not loaded")
 }
@@ -66,15 +66,14 @@ class CustomMenu {
       console.log("Error or Ability is not ready", ability.CooldownDuration)
     }
     const owner = ability.Owner
-    if (!owner) {
-      console.log("Owner Error")
-    }
-    const enemies:Entity[] = GameState.AllHeroes.filter(ent =>
-      ent.IsAlive && ent.IsEnemy(owner) && ability.CantHit(ent)
-      )
+    const allEntities = Entity.EntityManager.AllEntities
+    const enemies = Entity.EntityManager.AllEntities.filter (ent =>
+      ent.IsAlive && ent.IsEnemy(owner) && ability.CanHit(ent))
+
     const target = owner.Closest(enemies)
     if (target) {
       console.log(`Cast spell in ${target.Name}`)
+      ability.UseAbility(target)
     } else {
       console.log("Target Error or zero targets")
     }
