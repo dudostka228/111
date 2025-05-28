@@ -13,7 +13,7 @@ import {
   Ability,
 } from "github.com/octarine-public/wrapper/index"
 
-import { WrapperClass } from "github.com/octarine-public/wrapper/Decorators"
+import { WrapperClass } from "../../../Decorators"
 
 @WrapperClass("ursa_enrage_lua")
 class ursa_enrage_lua extends Ability {}
