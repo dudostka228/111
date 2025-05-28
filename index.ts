@@ -22,8 +22,7 @@ class CustomMenu {
   private tree: Menu.Node
   public toggleEnabled: Menu.Toggle
   public keybindHook: Menu.KeyBind
-  public keybindLogAbilities: Menu.KeyBind
-  private tickCounter = 0
+  public keybindCast: Menu.KeyBind
 
   constructor() {
     this.tree = Menu.AddEntry("dudostka228")
@@ -36,8 +35,8 @@ class CustomMenu {
     this.keybindHook = this.tree.AddKeybind("Клавиша хука")
     this.keybindHook.OnPressed(() => this.onHookPressed())
 
-    this.keybindLogAbilities = this.tree.AddKeybind("chc test")
-    this.keybindLogAbilities.OnPressed(() => this.onLogAbilities())
+    this.keybindCast = this.tree.AddKeybind("Cast Abilities")
+    this.keybindCast.OnPressed(() => this.onCastAbilities())
 
     EventsSDK.on("Tick", () => this.onTickAbilities())
   }
@@ -109,54 +108,57 @@ class CustomMenu {
     }
   }
 
-  private onLogAbilities() {
-    const rawMe = LocalPlayer
-    if (!(rawMe instanceof Player)) {
-      console.error("LocalPlayer не является Player или не определён")
-      return
-    }
-    const me = rawMe as Player
+  private getAbilitiesFromEntity<T>(cls: new () => T): T[] {
+    return EntityManager.GetEntitiesByClass(cls as any) as T[]
+  }
 
-    const spells = me.Spells
-    if (!spells || spells.length === 0) {
-      console.log("Способности не найдены или список пуст")
-      return
+  private onCastAbilities() {
+    if (!this.toggleEnabled.value) return
+    const raw = LocalPlayer
+    if (!(raw instanceof Player)) return
+    const me = raw as Player
+
+    // Собираем все способности по классам
+    let abilities = [
+      ...this.getAbilitiesFromEntity(ursa_enrage_lua),
+      ...this.getAbilitiesFromEntity(juggernaut_blade_fury),
+      ...this.getAbilitiesFromEntity(shadow_demon_disseminate)
+    ] as (ursa_enrage_lua | juggernaut_blade_fury | shadow_demon_disseminate)[]
+
+    if (me.HasShard) {
+      abilities.push(...this.getAbilitiesFromEntity(spectre_dispersion) as spectre_dispersion[])
     }
 
-    console.log("=== Способности героя: ===")
-    spells.forEach((abil, idx) => {
-      console.log(`${idx + 1}: ${abil.Name} (Cooldown: ${abil.CooldownDuration.toFixed(1)})`)
+    // Фильтруем способности, принадлежащие локальному герою и готовые к касту
+    abilities = abilities.filter(abil => {
+      const owner = (abil as any).Owner as Unit | undefined
+      return owner === me && abil.IsReady && abil.CanBeCasted()
+    })
+
+    // Кастуем каждую
+    for (const abil of abilities) {
+      abil.UseAbility(me, false, false, false, true)
+      console.log(`Cast ${abil.Name}`)
+    }
+
+    // Последним бьем Bad Juju
+    const badList = this.getAbilitiesFromEntity(dazzle_bad_juju_lua) as dazzle_bad_juju_lua[]
+    badList.forEach(badJuju => {
+      if ((badJuju as any).Owner === me && badJuju.IsReady && badJuju.CanBeCasted()) {
+        badJuju.UseAbility(me, false, false, false, true)
+        console.log(`Cast ${badJuju.Name}`)
+      }
     })
   }
 
   private onTickAbilities() {
     if (!this.toggleEnabled.value) return
+    const raw = LocalPlayer
+    if (!(raw instanceof Player)) return
+    const me = raw as Player
 
-    const rawMe = LocalPlayer
-    if (!(rawMe instanceof Player)) return
-    const me = rawMe as Player
-
-    const abilitiesToCast = [
-      me.GetAbilityByName("ursa_enrage_lua") as ursa_enrage_lua,
-      me.GetAbilityByName("juggernaut_blade_fury") as juggernaut_blade_fury,
-      me.GetAbilityByName("shadow_demon_disseminate") as shadow_demon_disseminate,
-      me.HasShard ? (me.GetAbilityByName("spectre_dispersion") as spectre_dispersion) : undefined
-    ].filter((a): a is
-      ursa_enrage_lua |
-      juggernaut_blade_fury |
-      shadow_demon_disseminate |
-      spectre_dispersion => !!a)
-
-    for (const ability of abilitiesToCast) {
-      if (ability.IsReady && ability.CanBeCasted()) {
-        ability.UseAbility(me, false, false, false, true)
-      }
-    }
-
-    const badJuju = me.GetAbilityByName("dazzle_bad_juju_lua") as dazzle_bad_juju_lua | undefined
-    if (badJuju && badJuju.IsReady && badJuju.CanBeCasted()) {
-      badJuju.UseAbility(me, false, false, false, true)
-    }
+    // Повторяем логику onCastAbilities для тик-ротации
+    this.onCastAbilities()
   }
 }
 
