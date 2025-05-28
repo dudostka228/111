@@ -7,11 +7,7 @@ import {
   Vector3,
 } from "github.com/octarine-public/wrapper/index"
 
-console.log("Hello World!")
-
-EventsSDK.on("GameStarted", () => {
-  console.log("GameStarted")
-})
+console.log("V.2")
 
 class CustomMenu {
   private tree: Menu.Node
