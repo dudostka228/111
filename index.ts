@@ -1,6 +1,4 @@
 import { EventsSDK, Menu, Ability, Unit, Entity, EntityManager, LocalPlayer } from "github.com/octarine-public/wrapper/index"
-import * as fs from "fs"
-import * as path from "path"
 
 function logToFile(message: string) {
   const timestamp = new Date().toISOString()
