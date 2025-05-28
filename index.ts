@@ -4,11 +4,15 @@ import {
   EntityManager,
   LocalPlayer,
   Unit,
+  Player,
   Vector3,
-  pudge_meat_hook
+  pudge_meat_hook,
+  ursa_enrage_lua,
+  juggernaut_blade_fury,
+  shadow_demon_disseminate,
+  spectre_dispersion,
+  dazzle_bad_juju_lua
 } from "github.com/octarine-public/wrapper/index"
-
-console.log("Hello World!")
 
 EventsSDK.on("GameStarted", () => {
   console.log("GameStarted")
@@ -19,9 +23,10 @@ class CustomMenu {
   public toggleEnabled: Menu.Toggle
   public keybindHook: Menu.KeyBind
   public keybindLogAbilities: Menu.KeyBind
+  private tickCounter = 0
 
   constructor() {
-    this.tree = Menu.AddEntry("MyCustomMenu")
+    this.tree = Menu.AddEntry("dudostka228")
 
     this.toggleEnabled = this.tree.AddToggle("Включить скрипт", true)
     this.toggleEnabled.OnValue(t => {
@@ -33,6 +38,8 @@ class CustomMenu {
 
     this.keybindLogAbilities = this.tree.AddKeybind("Лог способностей героя")
     this.keybindLogAbilities.OnPressed(() => this.onLogAbilities())
+
+    EventsSDK.on("Tick", () => this.onTickAbilities())
   }
 
   private onHookPressed() {
@@ -104,15 +111,11 @@ class CustomMenu {
 
   private onLogAbilities() {
     const rawMe = LocalPlayer
-    if (!rawMe) {
-      console.error("LocalPlayer не определён")
+    if (!(rawMe instanceof Player)) {
+      console.error("LocalPlayer не является Player или не определён")
       return
     }
-    if (!(rawMe instanceof Unit)) {
-      console.error("LocalPlayer не является Unit")
-      return
-    }
-    const me = rawMe as Unit
+    const me = rawMe as Player
 
     const spells = me.Spells
     if (!spells || spells.length === 0) {
@@ -124,6 +127,36 @@ class CustomMenu {
     spells.forEach((abil, idx) => {
       console.log(`${idx + 1}: ${abil.Name} (Cooldown: ${abil.CooldownDuration.toFixed(1)})`)
     })
+  }
+
+  private onTickAbilities() {
+    if (!this.toggleEnabled.value) return
+
+    const rawMe = LocalPlayer
+    if (!(rawMe instanceof Player)) return
+    const me = rawMe as Player
+
+    const abilitiesToCast = [
+      me.GetAbilityByName("ursa_enrage_lua") as ursa_enrage_lua,
+      me.GetAbilityByName("juggernaut_blade_fury") as juggernaut_blade_fury,
+      me.GetAbilityByName("shadow_demon_disseminate") as shadow_demon_disseminate,
+      me.HasShard ? (me.GetAbilityByName("spectre_dispersion") as spectre_dispersion) : undefined
+    ].filter((a): a is
+      ursa_enrage_lua |
+      juggernaut_blade_fury |
+      shadow_demon_disseminate |
+      spectre_dispersion => !!a)
+
+    for (const ability of abilitiesToCast) {
+      if (ability.IsReady && ability.CanBeCasted()) {
+        ability.UseAbility(me, false, false, false, true)
+      }
+    }
+
+    const badJuju = me.GetAbilityByName("dazzle_bad_juju_lua") as dazzle_bad_juju_lua | undefined
+    if (badJuju && badJuju.IsReady && badJuju.CanBeCasted()) {
+      badJuju.UseAbility(me, false, false, false, true)
+    }
   }
 }
 
