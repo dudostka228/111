@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, pudge_rot } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -9,7 +9,7 @@ EventsSDK.on("GameStarted", () => {
 
 const index = 0
 const serial = 0
-const ability = new pudge_rot(index, serial, "pudge_rot")
+const ability = new Ability(index, serial, "pudge_rot")
 
 class CustomMenu {
   private tree: Menu.Node
