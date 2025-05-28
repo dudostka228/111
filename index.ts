@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, Ability, Unit, Entity } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, Unit, Entity, GameState } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -6,6 +6,10 @@ EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
 
+const allHeroes = GameState.AllHeroes
+if (!allHeroes) {
+  console.log("AllHeroes not loaded")
+}
 
 const index = 0
 const serial = 0
