@@ -11,6 +11,7 @@ import {
   shadow_demon_disseminate,
   spectre_dispersion,
   Ability,
+  item_aghanims_shard
 } from "github.com/octarine-public/wrapper/index"
 import { WrapperClass } from "../../octarine-public/wrapper/wrapper/Decorators"
 
@@ -119,38 +120,35 @@ class CustomMenu {
   }
 
   private onCastAbilities() {
-    if (!this.toggleEnabled.value) return
-    const raw = LocalPlayer
-    if (!(raw instanceof Player)) return
-    const me = raw as Player
+  if (!this.toggleEnabled.value) return
+  const raw = LocalPlayer
+  if (!(raw instanceof Player)) return
+  const me = raw as Player
 
-    let abilities = [
-      ...this.getAbilitiesFromEntity(ursa_enrage_lua),
-      ...this.getAbilitiesFromEntity(juggernaut_blade_fury),
-      ...this.getAbilitiesFromEntity(shadow_demon_disseminate)
-    ] as (ursa_enrage_lua | juggernaut_blade_fury | shadow_demon_disseminate)[]
+  const allAbilities = [
+    ...EntityManager.GetEntitiesByClass(ursa_enrage_lua),
+    ...EntityManager.GetEntitiesByClass(juggernaut_blade_fury),
+    ...EntityManager.GetEntitiesByClass(shadow_demon_disseminate)
+    ...EntityManager.GetEntitiesByClass(spectre_dispersion)
+  ] as Ability[]
 
-    if (me.HasShard) {
-      abilities.push(...this.getAbilitiesFromEntity(spectre_dispersion) as spectre_dispersion[])
+  const usableAbilities = allAbilities.filter(abil => {
+    const owner = abil.Owner
+    return owner === me && abil.IsReady && abil.CanBeCasted()
+  })
+
+  for (const abil of usableAbilities) {
+    abil.UseAbility(me, false, false, false, true)
+    console.log(`Cast ${abil.Name}`)
+  }
+
+  const badJujuList = EntityManager.GetEntitiesByClass(dazzle_bad_juju_lua) as dazzle_bad_juju_lua[]
+  for (const badJuju of badJujuList) {
+    if (badJuju.Owner === me && badJuju.IsReady && badJuju.CanBeCasted()) {
+      badJuju.UseAbility(me, false, false, false, true)
+      console.log(`Cast ${badJuju.Name}`)
     }
-
-    abilities = abilities.filter(abil => {
-      const owner = (abil as any).Owner as Unit | undefined
-      return owner === me && abil.IsReady && abil.CanBeCasted()
-    })
-
-    for (const abil of abilities) {
-      abil.UseAbility(me, false, false, false, true)
-      console.log(`Cast ${abil.Name}`)
-    }
-
-    // const badList = this.getAbilitiesFromEntity(dazzle_bad_juju_lua) as dazzle_bad_juju_lua[]
-    // badList.forEach(badJuju => {
-    //   if ((badJuju as any).Owner === me && badJuju.IsReady && badJuju.CanBeCasted()) {
-    //     badJuju.UseAbility(me, false, false, false, true)
-    //     console.log(`Cast ${badJuju.Name}`)
-    //   }
-    // })
+  }
   }
 
   private onTickAbilities() {
