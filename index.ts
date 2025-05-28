@@ -62,8 +62,8 @@ class CustomMenu {
     }
     const owner = ability.Owner
     const allEntities = Entity.EntityManager.AllEntities
-    const enemies = Entity.EntityManager.AllEntities.filter (ent =>
-      ent.IsAlive && ent.IsEnemy(owner) && ability.CanHit(ent))
+    const enemies = allEntities.filter (ent =>
+      ent.IsAlive && ability.CanHit(ent))
 
     const target = owner.Closest(enemies)
     if (target) {
