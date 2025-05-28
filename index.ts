@@ -11,8 +11,9 @@ import {
   shadow_demon_disseminate,
   spectre_dispersion,
   Ability,
-  WrapperClass
 } from "github.com/octarine-public/wrapper/index"
+
+import { WrapperClass } from "../../../Decorators"
 
 @WrapperClass("ursa_enrage_lua")
 class ursa_enrage_lua extends Ability {}
