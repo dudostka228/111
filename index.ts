@@ -2,12 +2,10 @@ import {
   EventsSDK,
   Menu,
   EntityManager,
-  LocalPlayer,
   Unit,
   pudge_meat_hook,
   Vector3,
 } from "github.com/octarine-public/wrapper/index"
-import { Events } from "octarine-wrapper"
 
 console.log("Hello World!")
 
