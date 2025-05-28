@@ -60,12 +60,12 @@ class CustomMenu {
     } else {
       console.log("Error or Ability is not ready", ability.CooldownDuration)
     }
-    const owner = ability.Owner
+
     const allEntities = EntityManager.AllEntities
     const enemies = allEntities.filter (ent =>
       ent.IsAlive && ability.CanHit(ent))
 
-    const target = owner.Closest(enemies)
+    const target = Entity.Closest(enemies)
     if (target) {
       console.log(`Cast spell in ${target.Name}`)
       ability.UseAbility(target)
