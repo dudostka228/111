@@ -1,15 +1,5 @@
 import { EventsSDK, Menu, Ability, Unit, Entity, EntityManager, LocalPlayer } from "github.com/octarine-public/wrapper/index"
 
-function logToFile(message: string) {
-  const timestamp = new Date().toISOString()
-  const line = `[${timestamp}] ${message}\n`
-  try {
-    fs.appendFileSync(LOG_PATH, line, { encoding: "utf8" })
-  } catch (e) {
-    console.error("Failed to write log:", e)
-  }
-}
-
 console.log("Hello World!")
 
 EventsSDK.on("GameStarted", () => {
@@ -54,7 +44,6 @@ class CustomMenu {
     const units = EntityManager.AllEntities
     const closest = myLocalHero?.Closest(units)
     console.log("myLocalHero: ", myLocalHero, "units: ", units, "closest: ", closest)
-    logToFile(`myLocalHero: ${myLocalHero.Name}, closest enemy: ${closestEnemy?.Name ?? "none"}`)
   }
 }
 
