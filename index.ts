@@ -37,21 +37,18 @@ class CustomMenu {
       return
     }
 
-    const hookAbility = me.Abilities?.find(
-      a => a.Name === "pudge_meat_hook"
-    )
+    const hookAbility = me.GetAbilityByName("pudge_meat_hook")
     if (!hookAbility) {
       console.error("Ability pudge_meat_hook not found on hero")
       return
     }
 
-    console.log("Ability.CastRange:", hookAbility.CastRange)
-    if (hookAbility.CastRange === 0) {
+    const radius = hookAbility.CastRange
+    console.log("Ability.CastRange:", radius)
+    if (radius === 0) {
       console.warn("CastRange = 0, возможно способность ещё не синхронизировалась")
       return
     }
-
-    const radius = hookAbility.CastRange
 
     const enemiesInRange = EntityManager.AllEntities.filter(ent =>
       ent instanceof Unit &&
@@ -79,10 +76,10 @@ class CustomMenu {
 
     const used = hookAbility.UseAbility(
       target,
-      /*checkAutoCast*/ false,
-      /*checkToggled*/ false,
-      /*queue*/ false,
-      /*showEffects*/ true
+      /* checkAutoCast */ false,
+      /* checkToggled */ false,
+      /* queue */ false,
+      /* showEffects */ true
     )
 
     if (used) {
