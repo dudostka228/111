@@ -7,12 +7,14 @@ import {
   Player,
   Vector3,
   pudge_meat_hook,
-  ursa_enrage_lua,
   juggernaut_blade_fury,
   shadow_demon_disseminate,
   spectre_dispersion,
-  dazzle_bad_juju_lua
 } from "github.com/octarine-public/wrapper/index"
+import {
+  dazzle_bad_juju_lua,
+  ursa_enrage_lua
+} from "github.com/octarine-public/wrapper/Objects/Abilities/"
 
 EventsSDK.on("GameStarted", () => {
   console.log("GameStarted")
