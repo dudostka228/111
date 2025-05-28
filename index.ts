@@ -62,7 +62,7 @@ class CustomMenu {
 
     const myLocalHero = Player.IsLocalPlayer
     const units = EntityManager.AllEntities
-    const closest = Entity.Closest(units)
+    const closest = Entity.Closest
     console.log("myLocalHero: ", myLocalHero, "units: ", units, "closest: ", closest)
   }
 }
