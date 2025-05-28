@@ -15,12 +15,9 @@ class CustomMenu {
   public keybindExample: Menu.KeyBind
 
   constructor() {
-    this.tree = Menu.AddEntry("MyCustomMenu")
+    this.tree = Menu.AddEntry("dudostka228")
 
-    this.toggleExample = this.tree.AddToggle("Включить скрипт", true)
-    this.toggleExample.OnValue(t => {
-      console.log("Переключатель включен:", t.value)
-    })
+    this.toggleExample = this.tree.AddToggle("Turn On/Off", true)
 
     this.keybindExample = this.tree.AddKeybind("Клавиша активации")
     this.keybindExample.OnPressed(() => this.pressedButton())
@@ -34,21 +31,10 @@ class CustomMenu {
       return
     }
 
-
     const hookOwner = EntityManager.GetEntitiesByClass(pudge_meat_hook)
     for (const hook of hookOwner) {
       const owner = hook.Owner
       if (!owner || !owner.IsControllable || !owner.IsAlive || !hook.CanBeCasted()) {
-        continue
-      }
-
-    for (const hook of hookOwner) {
-      const owner = hook.Owner
-      if (!owner || !owner.IsControllable) {
-        continue
-      }
-      if (!hook.CanBeCasted()) {
-        console.warn("Meat Hook not ready. CooldownDuration:", hook.CooldownDuration)
         continue
       }
 
