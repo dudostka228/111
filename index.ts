@@ -9,7 +9,7 @@ EventsSDK.on("GameStarted", () => {
 
 const index = 0
 const serial = 0
-const ability = new Ability(index, serial, "pudge_rot")
+const ability = new Ability(index, serial, "pudge_meat_hook")
 
 class CustomMenu {
   private tree: Menu.Node
@@ -56,10 +56,10 @@ class CustomMenu {
   public pressedButton() {
     console.log("Bind is pressed")
     if (ability.isReady) {
-      console.log("Rot is Ready")
+      console.log("Ability is Ready")
       ability.UseAbility()
     } else {
-      console.log("Error, Rot is not ready", ability.Cooldown.toFixed(1))
+      console.log("Error, Ability is not ready", ability.Cooldown.toFixed(1))
     }
   }
 }
