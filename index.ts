@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, Ability, Unit, Entity, EntityManager, LocalPlayer } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, EntityManager, LocalPlayer, Vector3 } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -6,19 +6,12 @@ EventsSDK.on("GameStarted", () => {
  console.log("GameStarted")
 })
 
-const index = 0
-const serial = 0
-const ability = new Ability(index, serial, "pudge_meat_hook")
+const ability = new Ability(0, 0, "pudge_meat_hook")
 
 class CustomMenu {
   private tree: Menu.Node
   public toggleExample: Menu.Toggle
-  public sliderExample: Menu.Slider
-  public colorPickerExample: Menu.ColorPicker
-  public dropdownExample: Menu.Dropdown
-  public buttonExample: Menu.Button
   public keybindExample: Menu.KeyBind
-  public keynamesExample: Menu.KeyNames
 
   constructor() {
     this.tree = Menu.AddEntry("MyCustomMenu")
@@ -32,18 +25,33 @@ class CustomMenu {
     this.keybindExample.OnPressed(() => this.pressedButton())
     
   }
-  public pressedButton() {
+  private pressedButton() {
     console.log("Bind is pressed")
-    if (ability.IsReady) {
-      console.log("Ability is Ready", ability.IsReady)
-    } else {
-      console.log("Error or Ability is not ready", ability.CooldownDuration)
+    const me = LocalPlayer
+    if (!me) {
+      console.log("Localplayer is not defined")
+      return
     }
+    
+    const radius = ability.CastRange
+    console.log("CastRange:", radius)
 
-    const myLocalHero = LocalPlayer
-    const units = EntityManager.AllEntities
-    const closest = myLocalHero?.Closest(units)
-    console.log("myLocalHero: ", myLocalHero, "units: ", units, "closest: ", closest)
+    const enemiesInRange = EntityManager.AllEntities.filter (ent =>
+      ent.IsUnit && ent.IsAlive && ent.IsEnemy(me) && ent.Distance(me) <= radius)
+    
+    if (enemiesInRange.lenght === 0) {
+      console.log("Zero targets", radius)
+      return
+    }
+    const target = me.Closest(enemiesInRange)
+    console.log("TargetName: ", target.Name, "Distance: ", me.Distance(target))
+    
+    const used = ability.UseAbility(target, /*checkAutoCast*/ false, /*checkToggled*/ false, /*queue*/ false, /*showEffects*/ true)
+    if (used) {
+      console.log("Ability is used to: ", target.Name)
+    } else {
+      console.log("Error, Ability is not used: ", ability.CooldownDuration)
+    }
   }
 }
 
