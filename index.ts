@@ -1,4 +1,4 @@
-import { EventsSDK, Menu, Ability, Unit, Entity, EntityManager, Player } from "github.com/octarine-public/wrapper/index"
+import { EventsSDK, Menu, Ability, Unit, Entity, EntityManager, LocalPlayer } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
@@ -28,41 +28,21 @@ class CustomMenu {
       console.log("Переключатель включен:", t.value)
     })
     
-    // this.sliderExample = this.tree.AddSlider("Интервал (мс)", 50, 10, 1000, 10)
-    // this.sliderExample.OnValue(s => {
-    //   console.log("Слайдер значение:", s.value)
-    // })
-
-    // this.dropdownExample = this.tree.AddDropdown("Режим работы", ["Авто", "Ручной", "Отключено"], 0)
-    // this.dropdownExample.OnValue((index, value) => {
-    //   console.log(`Выбран режим: ${value} (ID ${index})`)
-    // })
-
-    // this.colorPickerExample = this.tree.AddColorPicker("Цвет UI", Color.Red)
-    // this.colorPickerExample.OnValue(c => {
-    //   console.log("Выбран цвет:", c)
-    // })
-
-    // this.buttonExample = this.tree.AddButton("Нажми меня")
-    // this.buttonExample.OnValue(() => {
-    //   console.log("Кнопка была нажата!")
-    // })
-
     this.keybindExample = this.tree.AddKeybind("Клавиша активации")
     this.keybindExample.OnPressed(() => this.pressedButton())
     
   }
   public pressedButton() {
     console.log("Bind is pressed")
-    if (ability.isReady) {
+    if (ability.IsReady) {
       console.log("Ability is Ready", ability.IsReady)
     } else {
       console.log("Error or Ability is not ready", ability.CooldownDuration)
     }
 
-    const myLocalHero = Player.IsLocalPlayer
+    const myLocalHero = LocalPlayer
     const units = EntityManager.AllEntities
-    const closest = Entity.Closest
+    const closest = myLocalHero?.Closest(units)
     console.log("myLocalHero: ", myLocalHero, "units: ", units, "closest: ", closest)
   }
 }
