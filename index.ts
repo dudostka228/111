@@ -1,5 +1,4 @@
-import { EventsSDK, Menu } from "github.com/octarine-public/wrapper/index"
-import { pudge_rot } from "../../octarine-public/wrapper/src/Objects/Abilities/Pudge/pudge_rot"
+import { EventsSDK, Menu, pudge_rot } from "github.com/octarine-public/wrapper/index"
 
 console.log("Hello World!")
 
