@@ -44,7 +44,9 @@ class CustomMenu {
     }
     const me = rawMe as Player
 
-    const hookAbility = me.GetAbilityByName("pudge_meat_hook")
+    const hookAbility = me.Spells.find(
+      abil => abil.Name === "pudge_meat_hook"
+    )
     if (!hookAbility) {
       console.error("Ability pudge_meat_hook не найдена у героя")
       return
